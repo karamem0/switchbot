@@ -1,0 +1,38 @@
+name: Trigger on main
+
+on:
+  push:
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  run:
+    name: Run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repos
+        uses: actions/checkout@v4
+      - name: Restore source
+        run: dotnet restore
+        working-directory: source/server
+      - name: Build source
+        shell: pwsh
+        run: |
+          dotnet publish `
+            Karamem0.SwitchBot.Web/Karamem0.SwitchBot.Web.csproj `
+            -c Release `
+            -p:PublishDir=${{github.workspace}}/source/server/build `
+            -p:Version=${{vars.BUILD_VERSION}}.${{github.run_number}} `
+            -p:FileVersion=${{vars.BUILD_VERSION}}.${{github.run_number}}
+        working-directory: source/server
+      - name: Connect to Azure
+        uses: azure/login@a65d910e8af852a8061c627c456678983e180302
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@de617f46172a906d0617bb0e50d81e9e3aec24c8
+        with:
+          app-name: ${{vars.AZURE_WEB_APP_NAME}}
+          package: source/server/build

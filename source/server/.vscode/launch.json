@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch AppHost",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/Karamem0.SwitchBot.AppHost/Karamem0.SwitchBot.AppHost.csproj"
+    },
+    {
+      "name": "Launch Web",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/Karamem0.SwitchBot.Web/Karamem0.SwitchBot.Web.csproj"
+    }
+  ]
+}
